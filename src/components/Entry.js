@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { Button } from "rmwc";
 import TextInput from "./TextInput";
 
 export default class Entry extends Component {
   static propTypes = {
     entry: PropTypes.object.isRequired,
     editEntry: PropTypes.func.isRequired,
-    deleteEntry: PropTypes.func.isRequired,
-    completeEntry: PropTypes.func.isRequired
+    deleteEntry: PropTypes.func.isRequired
   };
 
   state = {
@@ -43,12 +43,9 @@ export default class Entry extends Component {
       element = (
         <div className="entry">
           <label onDoubleClick={this.handleDoubleClick}>{entry.text}</label>
-          <button
-            className="entry__delete"
-            onClick={() => deleteEntry(entry.id)}
-          >
-            Usuń
-          </button>
+          <Button onClick={() => deleteEntry(entry.id)}>
+            <i className="material-icons">delete</i>
+          </Button>
         </div>
       );
     }

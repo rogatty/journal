@@ -7,7 +7,6 @@ export default function entries(state = [], action) {
         ...state,
         {
           id: state.reduce((maxId, entry) => Math.max(entry.id, maxId), -1) + 1,
-          completed: false,
           text: action.text
         }
       ];
