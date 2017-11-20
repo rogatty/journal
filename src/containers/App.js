@@ -5,10 +5,11 @@ import { connect } from "react-redux";
 import NewEntry from "../components/NewEntry";
 import EntriesList from "../components/EntryList";
 import * as Actions from "../actions";
+import { Typography } from "rmwc/Typography";
 
 const App = ({ entries, actions }) => (
   <div>
-    <h1>Dziennik</h1>
+    <Typography use="display2">Dziennik</Typography>
     <NewEntry addEntry={actions.addEntry} />
     <EntriesList entries={entries} actions={actions} />
   </div>

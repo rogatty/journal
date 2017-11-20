@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { TextField } from "rmwc/TextField";
 
 export default class TextInput extends Component {
   static propTypes = {
@@ -29,9 +30,8 @@ export default class TextInput extends Component {
 
   render() {
     return (
-      <input
-        type="text"
-        placeholder={this.props.placeholder}
+      <TextField
+        label={this.props.placeholder}
         autoFocus="true"
         value={this.state.text}
         onChange={this.handleChange}

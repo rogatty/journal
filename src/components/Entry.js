@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import classnames from "classnames";
-import { Button } from "rmwc";
 import TextInput from "./TextInput";
+import {
+  ListItem,
+  ListItemEndDetail,
+  ListItemStartDetail,
+  ListItemText
+} from "rmwc/List";
+import { Icon } from "rmwc/Icon";
 
 export default class Entry extends Component {
   static propTypes = {
@@ -15,7 +20,7 @@ export default class Entry extends Component {
     editing: false
   };
 
-  handleDoubleClick = () => {
+  edit = () => {
     this.setState({ editing: true });
   };
 
@@ -40,24 +45,19 @@ export default class Entry extends Component {
         />
       );
     } else {
-      element = (
-        <div className="entry">
-          <label onDoubleClick={this.handleDoubleClick}>{entry.text}</label>
-          <Button onClick={() => deleteEntry(entry.id)}>
-            <i className="material-icons">delete</i>
-          </Button>
-        </div>
-      );
+      element = entry.text;
     }
 
     return (
-      <li
-        className={classnames({
-          editing: this.state.editing
-        })}
-      >
-        {element}
-      </li>
+      <ListItem>
+        <ListItemStartDetail>
+          <Icon onClick={() => this.edit(entry.id)}>edit</Icon>
+        </ListItemStartDetail>
+        <ListItemText>{element}</ListItemText>
+        <ListItemEndDetail>
+          <Icon onClick={() => deleteEntry(entry.id)}>delete</Icon>
+        </ListItemEndDetail>
+      </ListItem>
     );
   }
 }
