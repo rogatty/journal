@@ -2,28 +2,29 @@ import React from "react";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import Header from "../components/Header";
-import MainSection from "../components/MainSection";
-import * as TodoActions from "../actions";
+import NewEntry from "../components/NewEntry";
+import EntriesList from "../components/EntryList";
+import * as Actions from "../actions";
 
-const App = ({ todos, actions }) => (
+const App = ({ entries, actions }) => (
   <div>
-    <Header addTodo={actions.addTodo} />
-    <MainSection todos={todos} actions={actions} />
+    <h1>Dziennik</h1>
+    <NewEntry addEntry={actions.addEntry} />
+    <EntriesList entries={entries} actions={actions} />
   </div>
 );
 
 App.propTypes = {
-  todos: PropTypes.array.isRequired,
+  entries: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  todos: state.todos
+  entries: state.entries
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(TodoActions, dispatch)
+  actions: bindActionCreators(Actions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
