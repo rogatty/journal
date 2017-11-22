@@ -8,7 +8,7 @@ import * as Actions from "../actions";
 import { Typography } from "rmwc/Typography";
 
 const App = ({ entries, actions }) => (
-  <div>
+  <div className="app-container">
     <Typography use="display2">Dziennik</Typography>
     <NewEntry addEntry={actions.addEntry} />
     <EntriesList entries={entries} actions={actions} />

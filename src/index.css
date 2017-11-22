@@ -58,3 +58,11 @@ body {
   padding: 0;
 }
 
+.app-container {
+  margin: 50px auto;
+  max-width: 600px;
+}
+
+.entry {
+  margin-bottom: 20px;
+}

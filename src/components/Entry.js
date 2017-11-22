@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextInput from "./TextInput";
-import {
-  ListItem,
-  ListItemEndDetail,
-  ListItemStartDetail,
-  ListItemText
-} from "rmwc/List";
 import { Icon } from "rmwc/Icon";
+import {
+  Card,
+  CardAction,
+  CardActions,
+  CardPrimary,
+  CardSubtitle,
+  CardTitle
+} from "rmwc/Card/index";
 
 export default class Entry extends Component {
   static propTypes = {
@@ -49,15 +51,20 @@ export default class Entry extends Component {
     }
 
     return (
-      <ListItem>
-        <ListItemStartDetail>
-          <Icon onClick={() => this.edit(entry.id)}>edit</Icon>
-        </ListItemStartDetail>
-        <ListItemText>{element}</ListItemText>
-        <ListItemEndDetail>
-          <Icon onClick={() => deleteEntry(entry.id)}>delete</Icon>
-        </ListItemEndDetail>
-      </ListItem>
+      <Card className="entry">
+        <CardPrimary>
+          <CardTitle large>{element}</CardTitle>
+          <CardSubtitle>Igor</CardSubtitle>
+        </CardPrimary>
+        <CardActions>
+          <CardAction>
+            <Icon onClick={() => this.edit(entry.id)}>edit</Icon>
+          </CardAction>
+          <CardAction>
+            <Icon onClick={() => deleteEntry(entry.id)}>delete</Icon>
+          </CardAction>
+        </CardActions>
+      </Card>
     );
   }
 }
