@@ -1,0 +1,55 @@
+service: graphql-api
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpackIncludeModules: true
+
+provider:
+  name: aws
+  region: eu-central-1
+  runtime: nodejs6.10
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:DescribeStream
+        - dynamodb:ListStreams
+      Resource: arn:aws:dynamodb:eu-central-1:*:*
+
+functions:
+  graphql:
+    handler: lib/handler.graphql
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+          authorizer: aws_iam
+resources:
+  Resources:
+    EntriesDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: 'entries'
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
