@@ -1,4 +1,4 @@
-import { graphqlLambda } from "apollo-server-lambda";
+import { graphqlLambda, graphiqlLambda } from "apollo-server-lambda";
 import { makeExecutableSchema } from "graphql-tools";
 
 // Types
@@ -16,7 +16,8 @@ exports.graphql = (event, context, callback) => {
   const callbackFilter = (error, output) => {
     const outputWithHeader = Object.assign({}, output, {
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true
       }
     });
     callback(error, outputWithHeader);
@@ -24,3 +25,7 @@ exports.graphql = (event, context, callback) => {
 
   graphqlLambda({ schema })(event, context, callbackFilter);
 };
+
+exports.graphiql = graphiqlLambda({
+  endpointURL: "/graphql"
+});

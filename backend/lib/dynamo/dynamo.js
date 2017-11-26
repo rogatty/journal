@@ -1,6 +1,8 @@
 import AWS from "aws-sdk";
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const dynamoDb = new AWS.DynamoDB.DocumentClient({
+  region: "eu-central-1"
+});
 
 export function scan(params) {
   return new Promise((resolve, reject) =>

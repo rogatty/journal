@@ -2,9 +2,17 @@ service: graphql-api
 
 plugins:
   - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
 
 custom:
   webpackIncludeModules: true
+  dynamodb:
+    start:
+      port: 8001
+      migrate: true
+  serverless-offline:
+    noAuth: true
 
 provider:
   name: aws
@@ -35,6 +43,13 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+  graphiql:
+    handler: lib/handler.graphiql
+    events:
+      - http:
+          path: graphiql
+          method: get
+          cors: true
 resources:
   Resources:
     EntriesDynamoDbTable:
