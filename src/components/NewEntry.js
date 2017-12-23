@@ -1,23 +1,25 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import TextInput from "./TextInput";
+import { graphql } from "react-apollo";
+import { entriesQuery } from "../constants/Queries";
+import { createEntryMutation } from "../constants/Mutations";
+import { compose } from "react-apollo/index";
 
-export default class NewEntry extends Component {
-  static propTypes = {
-    addEntry: PropTypes.func.isRequired
-  };
-
-  handleSave = text => {
+class NewEntry extends Component {
+  handleSave(text) {
     if (text.length !== 0) {
-      this.props.addEntry(text);
+      this.props.createEntry({
+        variables: { content: text },
+        refetchQueries: [{ query: entriesQuery }]
+      });
     }
-  };
+  }
 
   render() {
     return (
       <div className="new-entry">
         <TextInput
-          onSave={this.handleSave}
+          onSave={this.handleSave.bind(this)}
           placeholder="Wyraź się"
           newEntry={true}
         />
@@ -25,3 +27,7 @@ export default class NewEntry extends Component {
     );
   }
 }
+
+export default compose(graphql(createEntryMutation, { name: "createEntry" }))(
+  NewEntry
+);

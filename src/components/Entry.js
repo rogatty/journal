@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import TextInput from "./TextInput";
 import { Icon } from "rmwc/Icon";
 import {
@@ -10,44 +9,57 @@ import {
   CardSubtitle,
   CardTitle
 } from "rmwc/Card/index";
+import { compose, graphql } from "react-apollo";
+import {
+  deleteEntryMutation,
+  updateEntryMutation
+} from "../constants/Mutations";
+import { entriesQuery } from "../constants/Queries";
 
-export default class Entry extends Component {
-  static propTypes = {
-    entry: PropTypes.object.isRequired,
-    editEntry: PropTypes.func.isRequired,
-    deleteEntry: PropTypes.func.isRequired
-  };
-
+class Entry extends Component {
   state = {
-    editing: false
+    isEditing: false
   };
 
-  edit = () => {
-    this.setState({ editing: true });
-  };
+  enableEditMode() {
+    this.setState({ isEditing: true });
+  }
 
-  handleSave = (id, text) => {
+  handleSave(id, text) {
     if (text.length === 0) {
-      this.props.deleteEntry(id);
+      this.deleteEntry(id);
     } else {
-      this.props.editEntry(id, text);
+      this.updateEntry(id, text);
     }
-    this.setState({ editing: false });
-  };
+    this.setState({ isEditing: false });
+  }
+
+  deleteEntry(id) {
+    this.props.deleteEntry({
+      variables: { id },
+      refetchQueries: [{ query: entriesQuery }]
+    });
+  }
+
+  updateEntry(id, content) {
+    this.props.updateEntry({
+      variables: { id, content },
+      refetchQueries: [{ query: entriesQuery }]
+    });
+  }
 
   render() {
-    const { entry, deleteEntry } = this.props;
-
     let element;
-    if (this.state.editing) {
+
+    if (this.state.isEditing) {
       element = (
         <TextInput
-          text={entry.text}
-          onSave={text => this.handleSave(entry.id, text)}
+          text={this.props.entry.content}
+          onSave={content => this.handleSave(this.props.entry.id, content)}
         />
       );
     } else {
-      element = entry.text;
+      element = this.props.entry.content;
     }
 
     return (
@@ -58,13 +70,24 @@ export default class Entry extends Component {
         </CardPrimary>
         <CardActions>
           <CardAction>
-            <Icon onClick={() => this.edit(entry.id)}>edit</Icon>
+            <Icon onClick={() => this.enableEditMode()}>edit</Icon>
           </CardAction>
           <CardAction>
-            <Icon onClick={() => deleteEntry(entry.id)}>delete</Icon>
+            <Icon
+              onClick={() => {
+                this.deleteEntry(this.props.entry.id);
+              }}
+            >
+              delete
+            </Icon>
           </CardAction>
         </CardActions>
       </Card>
     );
   }
 }
+
+export default compose(
+  graphql(deleteEntryMutation, { name: "deleteEntry" }),
+  graphql(updateEntryMutation, { name: "updateEntry" })
+)(Entry);

@@ -1,22 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
 import { AppContainer } from "react-hot-loader";
 import App from "./containers/App";
-import reducer from "./reducers/index";
+import { ApolloClient } from "apollo-client";
+import { HttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloProvider } from "react-apollo";
+
 import "material-components-web/dist/material-components-web.css";
 import "./index.css";
 
-const store = createStore(reducer);
+const client = new ApolloClient({
+  // By default, this client will send queries to the
+  //  `/graphql` endpoint on the same host
+  // Pass the configuration option { uri: YOUR_GRAPHQL_API_URL } to the `HttpLink` to connect
+  // to a different host
+  link: new HttpLink({
+    // FIXME this works only for local sls
+    uri: "http://localhost:3001/graphql"
+  }),
+  cache: new InMemoryCache()
+});
 
 const render = () => {
   ReactDOM.render(
-    <Provider store={store}>
+    <ApolloProvider client={client}>
       <AppContainer>
         <App />
       </AppContainer>
-    </Provider>,
+    </ApolloProvider>,
     document.getElementById("root")
   );
 };

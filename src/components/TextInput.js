@@ -15,9 +15,11 @@ export default class TextInput extends Component {
   };
 
   handleSubmit = e => {
-    const text = e.target.value.trim();
     if (e.which === 13) {
+      const text = e.target.value.trim();
+
       this.props.onSave(text);
+
       if (this.props.newEntry) {
         this.setState({ text: "" });
       }

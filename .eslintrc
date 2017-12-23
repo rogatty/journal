@@ -20,8 +20,12 @@
     "prettier/react"
   ],
   "rules": {
+    "no-console": "warn",
+    "no-debugger": "warn",
+    "no-unused-vars": "warn",
     "prettier/prettier": "error",
-    "semi": 2
+    "react/prop-types": "warn",
+    "semi": "error"
   },
   "plugins": [
     "prettier",
