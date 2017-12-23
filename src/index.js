@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { AppContainer } from "react-hot-loader";
 import App from "./containers/App";
 import { ApolloClient } from "apollo-client";
@@ -24,11 +25,13 @@ const client = new ApolloClient({
 
 const render = () => {
   ReactDOM.render(
-    <ApolloProvider client={client}>
-      <AppContainer>
-        <App />
-      </AppContainer>
-    </ApolloProvider>,
+    <Router>
+      <ApolloProvider client={client}>
+        <AppContainer>
+          <App />
+        </AppContainer>
+      </ApolloProvider>
+    </Router>,
     document.getElementById("root")
   );
 };
