@@ -1,12 +1,13 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import EntryList from "./components/EntryList";
 import Login from "./containers/Login";
+import RouteWithProps from "./components/RouteWithProps";
 
-const Routes = () => (
+const Routes = ({ childProps }) => (
   <Switch>
-    <Route path="/" exact component={EntryList} />
-    <Route path="/login" exact component={Login} />
+    <RouteWithProps path="/" exact component={EntryList} props={childProps} />
+    <RouteWithProps path="/login" exact component={Login} props={childProps} />
   </Switch>
 );
 

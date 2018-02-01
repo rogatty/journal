@@ -32,7 +32,8 @@ export default class Login extends Component {
 
     return this.login(this.state.email, this.state.password)
       .then(() => {
-        alert("Logged in");
+        this.props.userHasAuthenticated(true);
+        this.props.history.push("/");
       })
       .catch(error => {
         alert(error);
@@ -40,8 +41,8 @@ export default class Login extends Component {
   };
 
   login(email, password) {
-    debugger;
     const userPool = new CognitoUserPool({
+      // Replaced during the build by config/env.js
       UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
       ClientId: process.env.REACT_APP_COGNITO_APP_CLIENT_ID
     });
@@ -49,7 +50,6 @@ export default class Login extends Component {
     const authenticationData = { Username: email, Password: password };
     const authenticationDetails = new AuthenticationDetails(authenticationData);
 
-    debugger;
     return new Promise((resolve, reject) =>
       user.authenticateUser(authenticationDetails, {
         onSuccess: result => resolve(),
@@ -62,24 +62,30 @@ export default class Login extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <TextField
-            autoFocus
-            id="email"
-            label="Email"
-            type="email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-          <TextField
-            id="password"
-            label="Password"
-            type="password"
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
-          <Button disabled={!this.validateForm()} type="submit">
-            Login
-          </Button>
+          <div>
+            <TextField
+              autoFocus
+              id="email"
+              label="Email"
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+          </div>
+          <div>
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              value={this.state.password}
+              onChange={this.handleChange}
+            />
+          </div>
+          <div>
+            <Button raised disabled={!this.validateForm()} type="submit">
+              Login
+            </Button>
+          </div>
         </form>
       </div>
     );
