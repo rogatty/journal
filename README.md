@@ -1,6 +1,1 @@
-## What is it?
-Journal app allowing to add entries and see them on a timeline. Work in progress.
-
-## Stack
-* React
-* Redux
+[Journal - a place to keep my memories](https://igor.rogatty.com/2018/01/29/journal-a-place-to-keep-my-memories/)
