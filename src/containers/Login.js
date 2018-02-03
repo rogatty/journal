@@ -52,7 +52,7 @@ export default class Login extends Component {
 
     return new Promise((resolve, reject) =>
       user.authenticateUser(authenticationDetails, {
-        onSuccess: result => resolve(),
+        onSuccess: () => resolve(),
         onFailure: err => reject(err)
       })
     );

@@ -2,24 +2,23 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AppContainer } from "react-hot-loader";
-import App from "./containers/App";
 import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
+import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
+
+import App from "./containers/App";
+import { signedFetch } from "./libs/awsLib";
 
 import "material-components-web/dist/material-components-web.css";
 import "./index.css";
 
+const httpLink = createHttpLink({
+  fetch: signedFetch
+});
+
 const client = new ApolloClient({
-  // By default, this client will send queries to the
-  //  `/graphql` endpoint on the same host
-  // Pass the configuration option { uri: YOUR_GRAPHQL_API_URL } to the `HttpLink` to connect
-  // to a different host
-  link: new HttpLink({
-    // FIXME this works only for local sls
-    uri: "http://localhost:3001/graphql"
-  }),
+  link: httpLink,
   cache: new InMemoryCache()
 });
 

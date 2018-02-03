@@ -24,7 +24,7 @@ class App extends Component {
     this.setState({ isAuthenticated: authenticated });
   };
 
-  handleLogout = event => {
+  handleLogout = () => {
     signOutUser();
 
     this.userHasAuthenticated(false);
@@ -36,8 +36,7 @@ class App extends Component {
       .then(() => {
         this.userHasAuthenticated(true);
       })
-      .catch(error => {
-        console.error(error);
+      .catch(() => {
         this.props.history.push("/login");
       })
       .finally(() => {

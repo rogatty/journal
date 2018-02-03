@@ -1,15 +1,26 @@
 import { CognitoUserPool } from "amazon-cognito-identity-js";
+import AWS from "aws-sdk";
+import AwsSigner from "./signRequest";
 
 export function authUser() {
+  if (
+    AWS.config.credentials &&
+    Date.now() < AWS.config.credentials.expireTime - 60000
+  ) {
+    return true;
+  }
+
   const currentUser = getCurrentUser();
 
   if (currentUser === null) {
     return Promise.reject("User is not logged in");
   }
 
-  return getUserToken(currentUser).then(() => {
-    return true;
-  });
+  return getUserToken(currentUser)
+    .then(getAwsCredentials)
+    .then(() => {
+      return true;
+    });
 }
 
 function getUserToken(currentUser) {
@@ -39,4 +50,46 @@ export function signOutUser() {
   if (currentUser !== null) {
     currentUser.signOut();
   }
+}
+
+function getAwsCredentials(userToken) {
+  const region = "eu-central-1";
+  const authenticator = `cognito-idp.${region}.amazonaws.com/${
+    process.env.REACT_APP_COGNITO_USER_POOL_ID
+  }`;
+
+  AWS.config.update({ region });
+
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+    Logins: {
+      [authenticator]: userToken
+    }
+  });
+
+  return AWS.config.credentials.getPromise();
+}
+
+export function signedFetch(path, { body, headers, method }) {
+  const url = `${process.env.REACT_APP_API_GATEWAY_URL}${path}`;
+
+  const signer = new AwsSigner({
+    accessKeyId: AWS.config.credentials.accessKeyId,
+    region: "eu-central-1",
+    secretAccessKey: AWS.config.credentials.secretAccessKey,
+    sessionToken: AWS.config.credentials.sessionToken
+  });
+
+  const signedHeaders = signer.sign({
+    method,
+    url,
+    headers,
+    body
+  });
+
+  return fetch(url, {
+    method,
+    headers: signedHeaders,
+    body
+  });
 }
