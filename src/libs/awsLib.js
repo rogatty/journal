@@ -72,12 +72,13 @@ function getAwsCredentials(userToken) {
 
 export function signedFetch(path, { body, headers, method }) {
   const url = `${process.env.REACT_APP_API_GATEWAY_URL}${path}`;
+  const { accessKeyId, secretAccessKey, sessionToken } = AWS.config.credentials;
 
   const signer = new AwsSigner({
-    accessKeyId: AWS.config.credentials.accessKeyId,
+    accessKeyId,
     region: "eu-central-1",
-    secretAccessKey: AWS.config.credentials.secretAccessKey,
-    sessionToken: AWS.config.credentials.sessionToken
+    secretAccessKey,
+    sessionToken
   });
 
   const signedHeaders = signer.sign({

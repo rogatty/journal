@@ -13,12 +13,10 @@ import { signedFetch } from "./libs/awsLib";
 import "material-components-web/dist/material-components-web.css";
 import "./index.css";
 
-const httpLink = createHttpLink({
-  fetch: signedFetch
-});
-
 const client = new ApolloClient({
-  link: httpLink,
+  link: createHttpLink({
+    fetch: signedFetch
+  }),
   cache: new InMemoryCache()
 });
 
