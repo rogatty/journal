@@ -1,6 +1,7 @@
 import { CognitoUserPool } from "amazon-cognito-identity-js";
 import AWS from "aws-sdk";
 import AwsSigner from "./signRequest";
+import uuid from "./uuid";
 
 export function authUser() {
   if (
@@ -93,4 +94,26 @@ export function signedFetch(path, { body, headers, method }) {
     headers: signedHeaders,
     body
   });
+}
+
+export async function s3Upload(file) {
+  if (!await authUser()) {
+    throw new Error("User is not logged in");
+  }
+
+  const s3 = new AWS.S3({
+    params: {
+      Bucket: process.env.REACT_APP_S3_BUCKET
+    }
+  });
+
+  const key = `${AWS.config.credentials.identityId}-${Date.now()}-${uuid()}`;
+
+  return s3
+    .upload({
+      Key: key,
+      Body: file,
+      ContentType: file.type
+    })
+    .promise();
 }

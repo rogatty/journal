@@ -30,5 +30,5 @@ class EntryList extends Component {
 }
 
 export default graphql(entriesQuery, {
-  options: { pollInterval: 5000 }
+  // options: { pollInterval: 5000 }
 })(EntryList);
