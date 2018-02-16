@@ -66,7 +66,6 @@ class Entry extends Component {
       <Card className="entry">
         <CardPrimary>
           <CardTitle large>{element}</CardTitle>
-          <CardSubtitle>Igor</CardSubtitle>
         </CardPrimary>
         <CardActions>
           <CardAction>

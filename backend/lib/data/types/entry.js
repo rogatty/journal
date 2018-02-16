@@ -1,6 +1,7 @@
 export default `
   type Entry {
     id: ID!
+    userId: String
     content: String
   }
 
@@ -11,6 +12,7 @@ export default `
 
   type Mutation {
     createEntry(
+      userId: String
       content: String!
     ): Entry
     updateEntry(

@@ -23,7 +23,19 @@ exports.graphql = (event, context, callback) => {
     callback(error, outputWithHeader);
   };
 
-  graphqlLambda({ schema })(event, context, callbackFilter);
+  let userId = context.identity.cognitoIdentityId;
+
+  if (!context.identity.cognitoIdentityId) {
+    // FIXME throw in production
+    // throw new Error("No identity found");
+    userId = "dev-user";
+  }
+
+  graphqlLambda({ schema, context: { userId } })(
+    event,
+    context,
+    callbackFilter
+  );
 };
 
 exports.graphiql = graphiqlLambda({

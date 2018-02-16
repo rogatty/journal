@@ -3,31 +3,36 @@ import * as db from "./dynamo";
 
 const TableName = "entries";
 
-export function getEntries() {
+export function getEntries(userId) {
   const params = {
     TableName,
-    AttributesToGet: ["id", "content"]
+    ProjectionExpression: ["id", "content"],
+    FilterExpression: "userId = :userId",
+    ExpressionAttributeValues: { ":userId": userId }
   };
 
   return db.scan(params);
 }
 
-export function getEntryById(id) {
+export function getEntryById(id, userId) {
   const params = {
     TableName,
     Key: {
       id
-    }
+    },
+    FilterExpression: "userId = :userId",
+    ExpressionAttributeValues: { ":userId": userId }
   };
 
   return db.get(params);
 }
 
-export function createEntry(args) {
+export function createEntry(args, userId) {
   const params = {
     TableName,
     Item: {
       id: uuid(),
+      userId: userId,
       content: args.content
     }
   };
@@ -35,14 +40,16 @@ export function createEntry(args) {
   return db.createItem(params);
 }
 
-export function updateEntry(args) {
+export function updateEntry(args, userId) {
   const params = {
     TableName: "entries",
     Key: {
       id: args.id
     },
+    ConditionExpression: "userId = :userId",
     ExpressionAttributeValues: {
-      ":content": args.content
+      ":content": args.content,
+      ":userId": userId
     },
     UpdateExpression: "SET content = :content",
     ReturnValues: "ALL_NEW"
@@ -51,11 +58,15 @@ export function updateEntry(args) {
   return db.updateItem(params, args);
 }
 
-export function deleteEntry(args) {
+export function deleteEntry(args, userId) {
   const params = {
     TableName,
     Key: {
       id: args.id
+    },
+    ConditionExpression: "userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": userId
     }
   };
 
