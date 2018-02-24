@@ -31,13 +31,21 @@ class NewEntry extends Component {
       this.setState({ isLoading: true });
 
       try {
-        const fileLocation = this.file
-          ? (await s3Upload(this.file)).Location
-          : null;
+        const variables = {
+          content: text
+        };
+
+        if (this.file) {
+          variables.attachments = [
+            {
+              url: (await s3Upload(this.file)).Location,
+              position: 0
+            }
+          ];
+        }
 
         this.props.createEntry({
-          // TODO send filename
-          variables: { content: text },
+          variables,
           refetchQueries: [{ query: entriesQuery }]
         });
       } catch (e) {

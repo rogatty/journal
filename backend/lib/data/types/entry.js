@@ -1,8 +1,20 @@
 export default `
   type Entry {
+    # Combined User ID and Create Date (Primary Key)
     id: ID!
-    userId: String
+    createDate: String!
     content: String
+    attachments: [Attachment]
+  }
+  
+  type Attachment {
+    position: Int!
+    url: String!
+  }
+  
+  input AttachmentInput {
+    position: Int!
+    url: String!
   }
 
   type Query {
@@ -12,12 +24,13 @@ export default `
 
   type Mutation {
     createEntry(
-      userId: String
       content: String!
+      attachments: [AttachmentInput]
     ): Entry
     updateEntry(
       id: ID!
       content: String!
+      attachments: [AttachmentInput]
     ): Entry
     deleteEntry(
       id: ID!

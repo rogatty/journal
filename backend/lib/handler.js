@@ -5,12 +5,17 @@ import { makeExecutableSchema } from "graphql-tools";
 import entryType from "./data/types/entry";
 
 // Resolvers
-import entryResolver from "./data/resolvers/entry";
+import resolvers from "./data/resolvers";
 
-const schema = makeExecutableSchema({
-  typeDefs: [entryType],
-  resolvers: entryResolver
-});
+let schema;
+try {
+  schema = makeExecutableSchema({
+    typeDefs: [entryType],
+    resolvers
+  });
+} catch (e) {
+  console.error(e);
+}
 
 exports.graphql = (event, context, callback) => {
   const callbackFilter = (error, output) => {
@@ -31,11 +36,14 @@ exports.graphql = (event, context, callback) => {
     userId = "dev-user";
   }
 
-  graphqlLambda({ schema, context: { userId } })(
-    event,
-    context,
-    callbackFilter
-  );
+  graphqlLambda({
+    schema,
+    context: { userId },
+    logger: {
+      log: e => console.log("GraphQL logger: ", e)
+    },
+    allowUndefinedInResolve: false
+  })(event, context, callbackFilter);
 };
 
 exports.graphiql = graphiqlLambda({

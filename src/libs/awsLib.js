@@ -8,7 +8,7 @@ export function authUser() {
     AWS.config.credentials &&
     Date.now() < AWS.config.credentials.expireTime - 60000
   ) {
-    return true;
+    return Promise.resolve();
   }
 
   const currentUser = getCurrentUser();
@@ -20,7 +20,7 @@ export function authUser() {
   return getUserToken(currentUser)
     .then(getAwsCredentials)
     .then(() => {
-      return true;
+      return Promise.resolve();
     });
 }
 
@@ -97,9 +97,7 @@ export function signedFetch(path, { body, headers, method }) {
 }
 
 export async function s3Upload(file) {
-  if (!await authUser()) {
-    throw new Error("User is not logged in");
-  }
+  await authUser();
 
   const s3 = new AWS.S3({
     params: {

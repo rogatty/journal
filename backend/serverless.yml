@@ -59,13 +59,33 @@ resources:
       Properties:
         TableName: 'entries'
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: createDate
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: createDate
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES
+    AttachmentsDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: 'attachments'
+        AttributeDefinitions:
+          - AttributeName: entryId
+            AttributeType: S
+          - AttributeName: position
+            AttributeType: N
+        KeySchema:
+          - AttributeName: entryId
+            KeyType: HASH
+          - AttributeName: position
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

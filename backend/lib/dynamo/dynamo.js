@@ -1,7 +1,10 @@
 import AWS from "aws-sdk";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient({
-  region: "eu-central-1"
+  // FIXME move to config
+  // region: "eu-central-1"
+  region: "localhost",
+  endpoint: "http://localhost:8001"
 });
 
 export function scan(params) {

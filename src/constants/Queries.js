@@ -5,6 +5,10 @@ export const entriesQuery = gql`
     entries {
       id
       content
+      attachments {
+        url
+        position
+      }
     }
   }
 `;

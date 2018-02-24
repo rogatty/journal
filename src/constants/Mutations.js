@@ -1,10 +1,9 @@
 import gql from "graphql-tag";
 
 export const createEntryMutation = gql`
-  mutation createEntry($content: String!) {
-    createEntry(content: $content) {
+  mutation createEntry($content: String!, $attachments: [AttachmentInput]) {
+    createEntry(content: $content, attachments: $attachments) {
       id
-      content
     }
   }
 `;
@@ -21,7 +20,6 @@ export const updateEntryMutation = gql`
   mutation updateEntry($id: ID!, $content: String!) {
     updateEntry(id: $id, content: $content) {
       id
-      content
     }
   }
 `;
